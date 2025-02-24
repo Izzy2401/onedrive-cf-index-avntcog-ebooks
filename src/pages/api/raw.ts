@@ -64,21 +64,14 @@ export default async function handler(req: NextRequest): Promise<Response> {
           responseType: 'stream',
         })
         headers['Cache-Control'] = cacheControlHeader
-
         // Send data stream as response
         // TODO
         // res.writeHead(200, headers as AxiosResponseHeaders)
         // stream.pipe(res)
         return new Response()
       } else {
-        // Check file type and set Content-Disposition header for download
-        const fileType = cleanPath.split('.').pop().toLowerCase()
-        if (fileType === 'pdf' || fileType === 'epub') {
-          headers['Content-Disposition'] = `attachment; filename="${cleanPath.split('/').pop()}"`
-        }
-
         headers['Location'] = data['@microsoft.graph.downloadUrl'] as string
-        return new Response(null, { status: 302, headers: headers })
+        return new Response(null, { status: 302, headers: headers})
       }
     } else {
       return new Response(JSON.stringify({ error: 'No download url found.' }), { status: 404, headers: headers })
